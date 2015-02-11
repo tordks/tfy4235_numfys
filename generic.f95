@@ -23,7 +23,8 @@ end module m_precision
 MODULE generic_functions
 
 use m_precision, only : wp;
-use constants;
+implicit none
+
 
 CONTAINS
 
@@ -33,8 +34,8 @@ CONTAINS
 	
 !https://gcc.gnu.org/onlinedocs/gcc-4.9.1/gfortran/RANDOM_005fSEED.html
 SUBROUTINE init_random_seed()
+	!implicit none
 	use iso_fortran_env, only: int64
-	implicit none
 	integer, allocatable :: seed(:)
 	integer :: i, n, un, istat, dt(8), pid
 	integer(int64) :: t
@@ -155,7 +156,7 @@ SUBROUTINE init_random_seed()
 	!Gaussian random number list of N+1 elements (by polar Box-Müller)
 	!-------------------------
 	FUNCTION gaussianList(g,n) result(gL)
-		integer			::	n;
+		integer			::	n,i;
 		real(wp)		::	gL(0:n);
 		real(wp)		::	g(0:n);
 

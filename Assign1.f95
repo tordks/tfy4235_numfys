@@ -10,7 +10,7 @@ use constants;
 use generic_functions;
 use specific_functions;
 
-implicit none
+!implicit none
 
 	integer, parameter	:: N = 1000;		!N+1 = number of particles
 	real(wp)			:: t = 0.05;	
@@ -26,15 +26,15 @@ implicit none
  	
  	
  	call init_random_seed();
- 	
- 	!write(*,*) PSI(1_wp);
+
+ 	write(*,*) psi(1.0);
  		
  	
- 	test = 100_wp;
+ 	test = 100;
  	do  i = 0, N
  		test = updatePos(test, t);
  	enddo
- 	!write(*,*) test;
+ 	write(*,*) test;
  	
  	
  	
