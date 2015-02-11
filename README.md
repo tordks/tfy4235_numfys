@@ -1,4 +1,4 @@
-#Computation physics
+#Computational physics
 
 Spring 2015
 
