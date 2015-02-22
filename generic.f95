@@ -1,41 +1,20 @@
 !####################################
-!Precision
-!####################################
-
-MODULE m_precision
-  ! defines standard precision 
-  
-
-  ! --- single
-  integer, parameter :: sp  = kind(1.0)
-  ! --- double
-  integer, parameter :: dp  = kind(1.0d0)
-  
-  ! --- working precision 
-  integer, parameter :: wp  = dp;
-  
-end module m_precision
-
-
-!####################################
 !Generic functions
 !####################################
 MODULE generic_functions
-
-use m_precision, only : wp;
-implicit none
-
-
+ 
+use mprecision, only : wp;
+use random, only : random_normal;
 CONTAINS
 
 	!------------------------------------
 	!random seed
 	!------------------------------------
-	
+!Code taken from:
 !https://gcc.gnu.org/onlinedocs/gcc-4.9.1/gfortran/RANDOM_005fSEED.html
 SUBROUTINE init_random_seed()
-	!implicit none
 	use iso_fortran_env, only: int64
+	implicit none
 	integer, allocatable :: seed(:)
 	integer :: i, n, un, istat, dt(8), pid
 	integer(int64) :: t
@@ -89,16 +68,18 @@ SUBROUTINE init_random_seed()
 	!toFile
 	!------------------------------------
 	
-	!First line is size of array.
-	!The rest the elements.
-	SUBROUTINE toFile(array, n)
-		implicit none
-		real(wp), intent(in) :: array(0:n);
-		integer , intent(in) :: n;
-		integer :: i;
-		integer, parameter :: out_unit=20
+	!Name of outfile in plot.
+	!Number of elements.
+	!Array elements.
+	SUBROUTINE toFile(array, n, filename)
+		character(LEN=*), intent(in)	:: filename		
+		real(wp), intent(in) 	:: array(0:n);
+		integer , intent(in) 	:: n;
+		integer 			 	:: i;	
+		integer, parameter 		:: out_unit=20
 	
-		open (unit=out_unit,file='results.txt',action="write",status="replace")
+		open (unit=out_unit,file=filename,action="write",status="replace")
+		write(out_unit,*) filename;
 		write(out_unit,*) n+1
 
 	
@@ -129,39 +110,40 @@ SUBROUTINE init_random_seed()
 		enddo
 
 	END  SUBROUTINE
-
+	
 	!-------------------------
 	!Gaussian random number (by polar Box-Müller)
 	!-------------------------
 	! Based on code from: http://www.design.caltech.edu/erik/Misc/Gaussian.html
-	FUNCTION gaussian() result(g)
-		real(wp)		::	x1, x2, w, y1, y2, g;
-		integer			::	i;
-		w = 2
-		do while (w>=1.0)
-			call random_number(x1);
-			call random_number(x2);
-			
-			x1 = 2.0_wp * x1 - 1.0_wp;
-			x2 = 2.0_wp * x2 - 1.0_wp;
-			w = x1 * x1 + x2 * x2;
-			
-		end do
-		w = sqrt( (-2.0_wp * log( w ) ) / w );
-		g = x1 * w;
-
-	END FUNCTION gaussian
+	!FUNCTION gaussian() result(g)
+	!	real(wp)		::	x1, x2, w, y1, y2, g;
+	!	integer			::	i;
+	!	w = 2
+	!	do while (w>=1.0)
+	!		call random_number(x1);
+	!		call random_number(x2);
+	!		
+	!		x1 = 2.0_wp * x1 - 1.0_wp;
+	!		x2 = 2.0_wp * x2 - 1.0_wp;
+	!		w = x1 * x1 + x2 * x2;
+	!		
+	!	end do
+	!	w = sqrt( (-2.0_wp * log( w ) ) / w );
+	!	g = x1 * w;
+	!
+	!END FUNCTION gaussian
+	
 	
 	!-------------------------
-	!Gaussian random number list of N+1 elements (by polar Box-Müller)
+	!Gaussian random number list
 	!-------------------------
-	FUNCTION gaussianList(g,n) result(gL)
-		integer			::	n,i;
+	FUNCTION gaussianList(n) result(gL)
+		integer			::	n;
 		real(wp)		::	gL(0:n);
 		real(wp)		::	g(0:n);
 
 		do i = 0, n
-				g(i) = gaussian();
+				g(i) = random_normal();
 		enddo
 		gL = g;
 	END FUNCTION gaussianList
@@ -171,7 +153,6 @@ SUBROUTINE init_random_seed()
 	!------------------------------------
 	
   SUBROUTINE printList(toPrint, n)
-	implicit none
 	
 	integer , intent(in) :: n;
 	real(wp), intent(in) :: toPrint(0:n);
@@ -186,5 +167,6 @@ SUBROUTINE init_random_seed()
 	enddo
 	write(*,*) ''
   END  SUBROUTINE 
+ 
   
 END MODULE generic_functions

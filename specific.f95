@@ -1,34 +1,6 @@
-!####################################
-!Constants
-!####################################
-
-MODULE constants
-	 use m_precision, only : wp;
-	 
-	 real(wp) 	::  m1 		= 5;
-	 real(wp)	::	m2 		= 100;
-	 real(wp)	::	r1 		= 12**(-9);
-	 real(wp)	::	r2 		= 0.000000012;
-	 
-	 real(wp)	::	L		= 20**(-6);
-	 real(wp)	::  dU		= 80;
-	 real(wp)	::	a		= 0.2;
-	 real(wp)	::	tau		= 0.1;
-	 real(wp)	::	J		= 0.001	!gamma in exercise
-	 real(wp)	::	w		= 1;
-	 real(wp)	::	dt		= 0.1;
-	 
-	 !real(wp)	::	D		= 0.026/dU;
-	 
-	 
-END MODULE constants
-
-!####################################
-!Specific functions
-!####################################
 
 MODULE specific_functions
-	use m_precision, only : wp;
+	use mprecision, only : wp;
 	use constants;
 	use generic_functions;
 	
@@ -40,23 +12,25 @@ MODULE specific_functions
 	!Potential V
 	!-------------------------
 	FUNCTION V(x,t) result(U)
-		real(wp), intent(in)	:: t;
-		real(wp), intent(in)	:: x;
-		real(wp)				:: U;
+		real(wp)	:: t;
+		real(wp)	:: tt;
+		real(wp)	:: x;
+		real(wp)	:: xt;
+		real(wp)	:: U;
+		
+		!Implements periodicity
+		xt = mod(x,a)
+		tt = mod(t,tau*w)
 	
-		IF( t >= 0 .and. t< 3*tau*w/4) then
+		IF( tt >= 0 .and. tt< 3*tau*w/4) then
 			U = 0;
-		ELSE IF ( t >= 3*tau*w/4 .and. t < tau*w) then
+		ELSE IF ( tt >= 3*tau*w/4 .and. tt < tau*w) then
 			
-			if( x >= 0 .and. x<a) then
-				U = x/a;
-			else if ( x >= a .and. x < 1) then
-				U = (1-x)/(1-a);
-			else
-				write(*,*) 'x out of bounds';
+			if( xt >= 0 .and. xt<a) then
+				U = xt/a;
+			else if ( xt >= a .and. xt < 1) then
+				U = (1-xt)/(1-a);;
 			endif
-		ELSE
-			write(*,*) 't out of bounds';
 		ENDIF
 	
 	END FUNCTION V
@@ -67,25 +41,25 @@ MODULE specific_functions
 	!-------------------------
 	FUNCTION F(x,t) result(Q)
 		real(wp)		:: t;
+		real(wp)		:: tt;
 		real(wp)		:: x;
+		real(wp)		:: xt;
 		real(wp)		:: Q;
 		
-		IF( t >= 0 .and. t< 3*tau*w/4) then
+		!Implements periodicity
+		xt = x - floor(x);
+		tt = t - floor(t);
+		
+		IF( tt >= 0 .and. tt< 3*tau*w/4) then
 			Q = 0;
-		ELSE IF ( t >= 3*tau*w/4 .and. t < tau*w) then
 			
-			if( x >= 0 .and. x<a) then
+		ELSE IF ( tt >= 3*tau*w/4 .and. tt < tau*w) then
+			if( xt >= 0 .and. xt<a) then
 				Q = -1/a;
-			else if ( x >= a .and. x < 1) then
+			else if ( xt >= a .and. xt < 1) then
 				Q = 1/(1-a);
-			else
-				write(*,*) 'x out of bounds';
 			endif
-		ELSE
-			write(*,*) 't out of bounds';
 		ENDIF
-	
-	
 	END FUNCTION F
 	
 	
@@ -93,13 +67,13 @@ MODULE specific_functions
 	!Euler scheme
 	!-------------------------
 	! One iteration
-	
-	FUNCTION updatePos(x1,t) result(x2)
-		real(wp)		:: x1;
-		real(wp)		:: x2;
+	! Ta inn array value
+	FUNCTION updatePos(x_1,t) result(x_2)
+		real(wp)		:: x_1;
+		real(wp)		:: x_2;
 		real(wp)		:: t;
 		
-		x2 = x1 - F(x1,t)*dt + sqrt(2*0.026*dt/dU) * gaussian();		
+		x_2 = x_1 - F(x_1,t)*dt + sqrt(2*kbT*dt/dU) * random_normal();		
 	
 	END FUNCTION updatePos
   

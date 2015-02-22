@@ -1,7 +1,7 @@
 ## Parameters
 AUTOBUILDS=#test #Kompiler self contained .f
-BUILDS= Assign1
-MODULES= generic specific
+BUILDS= assign1
+MODULES= mprecision constants random generic specific
 LIBS= slatec lapack
 LIBPATH=/usr/lib/
 
@@ -36,9 +36,8 @@ modules: $(MODULES)
 
 
 ## Dependencies
-Assign1: %: generic.o specific.o %.o
+assign1: %:mprecision.o constants.o random.o generic.o specific.o %.o
 	$(LINK)
-
 
 ## STNRD
 $(AUTOBUILDS): %: %.o
