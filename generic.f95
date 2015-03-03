@@ -2,7 +2,7 @@
 !Generic functions
 !####################################
 MODULE generic_functions
- 
+use constants
 use mprecision, only : wp;
 use random, only : random_normal;
 CONTAINS
@@ -115,23 +115,23 @@ SUBROUTINE init_random_seed()
 	!Gaussian random number (by polar Box-Müller)
 	!-------------------------
 	! Based on code from: http://www.design.caltech.edu/erik/Misc/Gaussian.html
-	!FUNCTION gaussian() result(g)
-	!	real(wp)		::	x1, x2, w, y1, y2, g;
-	!	integer			::	i;
-	!	w = 2
-	!	do while (w>=1.0)
-	!		call random_number(x1);
-	!		call random_number(x2);
-	!		
-	!		x1 = 2.0_wp * x1 - 1.0_wp;
-	!		x2 = 2.0_wp * x2 - 1.0_wp;
-	!		w = x1 * x1 + x2 * x2;
-	!		
-	!	end do
-	!	w = sqrt( (-2.0_wp * log( w ) ) / w );
-	!	g = x1 * w;
-	!
-	!END FUNCTION gaussian
+	FUNCTION gaussian() result(g)
+		real(wp)		::	x1, x2, w, y1, y2, g;
+		integer			::	i;
+		w = 2
+		do while (w>=1.0)
+			call random_number(x1);
+			call random_number(x2);
+			
+			x1 = 2.0_wp * x1 - 1.0_wp;
+			x2 = 2.0_wp * x2 - 1.0_wp;
+			w = x1 * x1 + x2 * x2;
+			
+		end do
+		w = sqrt( (-2.0_wp * log( w ) ) / w );
+		g = x1 * w;
+	
+	END FUNCTION gaussian
 	
 	
 	!-------------------------

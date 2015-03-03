@@ -19,17 +19,23 @@ MODULE specific_functions
 		real(wp)	:: U;
 		
 		!Implements periodicity
-		xt = mod(x,a)
+		xt = dmod(x,1.0_wp);
+		
+		!Pga potensialet ikke symmetrisk om origo. Plusser på perioden for å få xt positiv.
+		if(xt < 0) then
+			xt = xt+1;
+		endif
+		
 		tt = mod(t,tau*w)
-	
-		IF( tt >= 0 .and. tt< 3*tau*w/4) then
-			U = 0;
-		ELSE IF ( tt >= 3*tau*w/4 .and. tt < tau*w) then
+		
+		IF( tt >= 0.0_wp .and. tt< 3.0_wp*tau*w/4.0_wp) then
+			U = 0.0_wp;
+		ELSE IF ( tt >= 3.0_wp*tau*w/4.0_wp .and. tt < tau*w) then
 			
-			if( xt >= 0 .and. xt<a) then
+			if( xt >= 0.0_wp .and. xt<a) then
 				U = xt/a;
-			else if ( xt >= a .and. xt < 1) then
-				U = (1-xt)/(1-a);;
+			else if ( xt >= a .and. xt < 1.0_wp) then
+				U = (1.0_wp-xt)/(1.0_wp-a);
 			endif
 		ENDIF
 	
@@ -47,16 +53,21 @@ MODULE specific_functions
 		real(wp)		:: Q;
 		
 		!Implements periodicity
-		xt = x - floor(x);
-		tt = t - floor(t);
+		xt = dmod(x,1.0_wp);
+		
+		!Pga potensialet ikke symmetrisk om origo. Plusser på perioden for å få xt positiv.
+		if(xt < 0) then
+			xt = xt+1;
+		endif
+		tt = mod(t,tau*w)
 		
 		IF( tt >= 0 .and. tt< 3*tau*w/4) then
 			Q = 0;
 			
-		ELSE IF ( tt >= 3*tau*w/4 .and. tt < tau*w) then
+		ELSE IF ( tt >= 3.0_wp*tau*w/4.0_wp .and. tt < tau*w) then
 			if( xt >= 0 .and. xt<a) then
 				Q = -1/a;
-			else if ( xt >= a .and. xt < 1) then
+			else if ( xt >= a .and. xt < 1.0_wp) then
 				Q = 1/(1-a);
 			endif
 		ENDIF
@@ -68,12 +79,13 @@ MODULE specific_functions
 	!-------------------------
 	! One iteration
 	! Ta inn array value
-	FUNCTION updatePos(x_1,t) result(x_2)
+	FUNCTION updatePos(x_1,t, ddt) result(x_2)
 		real(wp)		:: x_1;
 		real(wp)		:: x_2;
 		real(wp)		:: t;
+		real(wp)		:: ddt;
 		
-		x_2 = x_1 - F(x_1,t)*dt + sqrt(2*kbT*dt/dU) * random_normal();		
+		x_2 = x_1 + F(x_1,t)*ddt + sqrt(2*kbT*ddt/dU) * random_normal();
 	
 	END FUNCTION updatePos
   
