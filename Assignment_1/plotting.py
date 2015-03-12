@@ -30,9 +30,10 @@ def read_constants():
     w   = float(f.readline().rstrip('\n'));	#[]  
     w2  = float(f.readline().rstrip('\n'));	#[] 
     D1  = float(f.readline().rstrip('\n'));	#[]
-    D2  = float(f.readline().rstrip('\n'));	#[] 
+    D2  = float(f.readline().rstrip('\n'));	#[]
+    p  = int(float(f.readline().rstrip('\n')));	#[] 
     f.close()
-    return(dU,tau,tid,t, dt,N,M,Nt,w, w2, D1, D2)
+    return(dU,tau,tid,t, dt,N,M,Nt,w, w2, D1, D2,p)
 
 
 #-----------------------------------------
@@ -45,7 +46,7 @@ def plot_particledensity():
 	tt = pos*dt;
 	
 	#Simulated result
-	data = np.loadtxt('Npartikler.dat')
+	data = np.loadtxt('Npartikler.txt')
 	plt.title('Particle density')
 	plt.ylabel('n')
 	plt.xlabel('x')
@@ -58,12 +59,19 @@ def plot_particledensity():
 #-----------------------------------------
 def plot_trajectory():
 	
-	y = linspace(0, Nt*dt, Nt)
+	y = linspace(0, Nt*dt, Nt/p)
 	data = np.loadtxt('Npartikler.txt') #NxNt array
+	
+	print(size(y))
+	print(size(data[0,:]))
+	
 	plt.title('Trajectory')
 	plt.ylabel('x')
 	plt.xlabel('t')
-	plt.plot(y,data[0,:]);
+	plt.plot(y, data[0,:]);
+	
+	print(size(y))
+	print(size(data[0,:]))
 	
 	plt.savefig('trajectoy.pdf')
 
@@ -102,16 +110,16 @@ def plot_avgDriftVelocity():
 #-----------------------------------------#
 start = time.time()
 
-[dU,tau,tid,t,dt,N,M,Nt,w,w2,D1, D2] = read_constants()
+[dU,tau,tid,t,dt,N,M,Nt,w,w2,D1, D2, p] = read_constants()
 
-#plot_trajectory();
+plot_trajectory();
 #plt.figure();
 
 #plt.figure
 #plot_avgDriftVelocity()
 
-plt.figure();
-plot_particledensity()
+#plt.figure();
+#plot_particledensity()
 
 stop = time.time()
 print("Plottime: %f seconds" %(stop-start))

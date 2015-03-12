@@ -55,8 +55,8 @@ implicit none
 			
 			do i = 0, N-1
 				do j = 1,Nt-1
-						t = t + ddt;
-						xn(i,j) = updatePos(xn(i, j-1),t,w, ddt);
+					t = t + ddt;
+					xn(i,j) = updatePos(xn(i, j-1),t,w, ddt);
 				enddo
 			enddo
 			
@@ -64,9 +64,9 @@ implicit none
 		write(*,*) k
 		enddo
 		
-		consts = [dU,tau,tid,t,dt,real(N,wp),real(M,wp), real(Nt,wp), w, w2, D1, D2, real(time(),wp)];
+		consts = [dU,tau,tid,t,dt,real(N,wp),real(M,wp), real(Nt,wp), w, w2, D1, D2, real(p,wp), real(time(),wp)];
 		call tofile(consts,num_consts,1, const,1);
-		call toFile(xn,N,Nt, posn,2);
+		call toFile(xn,N,Nt, posn,p);
 	endif
 	
 write(*,*) 'PROGRAM Assignment1: end';
