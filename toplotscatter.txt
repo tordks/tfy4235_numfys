@@ -1,4 +1,0 @@
-3
-pos_NoFlash_du=0.1kbT.txt
-pos_NoFlash_du=0.5kbT.txt
-pos_NoFlash_du=10kbT.txt

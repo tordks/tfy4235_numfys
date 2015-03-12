@@ -1,1 +1,0 @@
-gfortran generic.f95  specific.f95 Assign1.f95 -llapack -lslatec -o code
