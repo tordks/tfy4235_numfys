@@ -18,9 +18,9 @@ MODULE constants
 	 
 	 real(wp), parameter	::  dU		= 80 * 1.602176565E-19;![J]
 	 real(wp), parameter 	::	tau		= 0.5;![s] Gjøres dimensjonsløs i F og V
-	 real(wp), parameter	::  tid		= 50![s] 	!Kjøretid
+	 real(wp), parameter	::  tid		= 100![s] 	!Kjøretid
 	 real(wp), parameter	::	dt		= 0.0001![s]	!tidssteg
-	 integer, parameter		::	N		= 5;		 !Antall partikkler
+	 integer, parameter		::	N		= 10;		 !Antall partikkler
 	 integer, parameter		::  M		= 1;		 !Antall ganger programmet kjøres. (# tau)
 	 integer, parameter		:: 	Nt		= floor(tid/dt); !Antall tidssteg
 	 real(wp), parameter	::	w		= dU/(g1*L**2);! [1/s]
@@ -29,7 +29,7 @@ MODULE constants
 	 real(wp), parameter	::  ddt2	= dt*w2;![1]
 	 real(wp), parameter	::  D1		= kbT/g1;
 	 real(wp), parameter	::  D2		= kbT/g1;
-	 integer, parameter		::	p 		= 2!perioden til elementene som lagres til fil feks. p=2, A = [0,1,2,3,4,5,6,7,8] gjør at [0,2,4,6,8] skrives til fil.
+	 integer, parameter		::	p 		= 1!perioden til elementene som lagres til fil feks. p=2, A = [0,1,2,3,4,5,6,7,8] gjør at [0,2,4,6,8] skrives til fil.
 	 
 	 integer, parameter		:: num_consts = 14 ! # of consts to be plotted.
 	 

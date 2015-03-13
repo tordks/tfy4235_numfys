@@ -71,7 +71,7 @@ def plot_avgDriftVelocity():
 #-----------------------------------------#
 start = time.time()
 
-read_constants()
+dU,tau,tid,dt,N,M,Nt,w = read_constants()
 plot_avgDriftVelocity()
 
 stop = time.time()

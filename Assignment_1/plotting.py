@@ -50,9 +50,7 @@ def plot_particledensity():
 	plt.title('Particle density')
 	plt.ylabel('n')
 	plt.xlabel('x')
-	plt.hist(data[:,pos], 50);
-	
-	plt.savefig('particledensity.pdf')
+	plt.hist(data[:,pos], 20);
 
 #-----------------------------------------
 #		plot_trajectory();
@@ -62,18 +60,10 @@ def plot_trajectory():
 	y = linspace(0, Nt*dt, Nt/p)
 	data = np.loadtxt('Npartikler.txt') #NxNt array
 	
-	print(size(y))
-	print(size(data[0,:]))
-	
 	plt.title('Trajectory')
 	plt.ylabel('x')
 	plt.xlabel('t')
-	plt.plot(y, data[0,:]);
-	
-	print(size(y))
-	print(size(data[0,:]))
-	
-	plt.savefig('trajectoy.pdf')
+	plt.plot(y, data[1,:]);
 
 
 #-----------------------------------------
@@ -90,7 +80,6 @@ def plot_avgDriftVelocity():
 	plt.ylabel('Vd')
 	plt.xlabel(r'$\tau$')
 	plt.plot(data[0,:], data[1,:], '*')
-	plt.savefig('avgDriftVelocity.pdf')
 	
 	print(max(data[1,:]))
 	i = argmax(data[1,:])
@@ -108,22 +97,24 @@ def plot_avgDriftVelocity():
 #					Main			      #
 #-----------------------------------------#
 #-----------------------------------------#
-start = time.time()
 
+
+start = time.time()
+print("PROGRAM plotting: Begin")
 [dU,tau,tid,t,dt,N,M,Nt,w,w2,D1, D2, p] = read_constants()
 
 plot_trajectory();
-#plt.figure();
+plt.savefig('trajectoy.pdf')
 
 #plt.figure
 #plot_avgDriftVelocity()
+#plt.savefig('avgDriftVelocity.pdf')
 
-#plt.figure();
-#plot_particledensity()
+plt.figure();
+plot_particledensity()
+plt.savefig('particledensity.pdf')
 
 stop = time.time()
+print("PROGRAM plotting: end")
 print("Plottime: %f seconds" %(stop-start))
 #raw_input("Press enter to continue")
-
-
-

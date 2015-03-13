@@ -1,0 +1,5 @@
+#! /bin/bash
+
+make
+./assign1.out
+python plotting.py

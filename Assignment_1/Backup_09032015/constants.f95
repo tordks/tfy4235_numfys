@@ -20,8 +20,8 @@ MODULE constants
 	 real(wp) 	::	tau		= 0.21;![s] Gjøres dimensjonsløs i F og V
 	 real(wp), parameter	::  tid		= 100![s] 	!Kjøretid
 	 real(wp), parameter	::	dt		= 0.0001![s]	!tidssteg
-	 integer, parameter		::	N		= 200;			 !Antall partikkler
-	 integer, parameter		::  M		= 400;		 !Antall ganger programmet kjøres. (# tau)
+	 integer, parameter		::	N		= 300;			 !Antall partikkler
+	 integer, parameter		::  M		= 800;		 !Antall ganger programmet kjøres. (# tau)
 	 
 	 integer, parameter		:: 	Nt		= floor(tid/dt); !Antall tidssteg
 	 real(wp), parameter	::	w		= dU/(g1*L**2);! [1/s]
