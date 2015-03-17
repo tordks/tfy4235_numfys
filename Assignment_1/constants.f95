@@ -31,6 +31,6 @@ MODULE constants
 	 real(wp), parameter	::  D2		= kbT/g1;
 	 integer, parameter		::	p 		= 500!perioden til elementene som lagres til fil feks. p=2, A = [0,1,2,3,4,5,6,7,8] gjør at [0,2,4,6,8] skrives til fil.
 	 
-	 integer, parameter		:: num_consts = 14 ! # of consts to be plotted.
+	 integer, parameter		:: num_consts = 21 ! # of consts to be plotted.
 	 
 END MODULE constants

@@ -43,8 +43,8 @@ def plot_avgDriftVelocity():
 	print(data[1,:])
 	
 	plt.title('Average drift Velocity')
-	plt.ylabel('Vd')
-	plt.xlabel(r'$\tau$')
+	plt.ylabel('Vd/(m/s))')
+	plt.xlabel(r'$\tau$ /s')
 	plt.plot(data[0,:], data[1,:], '*')
 	#plt.errorbar(data[0,:], data[1,:], yerr=data[2,:])
 	

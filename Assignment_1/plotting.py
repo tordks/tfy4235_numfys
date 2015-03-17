@@ -33,33 +33,73 @@ def read_constants():
     D1  = float(f.readline().rstrip('\n'));	#[]
     D2  = float(f.readline().rstrip('\n'));	#[]
     p  = int(float(f.readline().rstrip('\n')));	#[] 
+    
+    L  = float(f.readline().rstrip('\n'));	#[m]
+    a  = float(f.readline().rstrip('\n'));	#[]
+    eta  = float(f.readline().rstrip('\n'));	#[]
+    KbT  = float(f.readline().rstrip('\n'));
+    g1  = float(f.readline().rstrip('\n'));
+    g2  = float(f.readline().rstrip('\n'));
+    r1  = float(f.readline().rstrip('\n'));
+    r2  = float(f.readline().rstrip('\n'));
     f.close()
-    return(dU,tau,tid,t, dt,N,M,Nt,w, w2, D1, D2,p)
+    return(dU,tau,tid,t, dt,N,M,Nt,w, w2, D1, D2,p, L, a, eta, KbT, g1, g2, r1, r2)
 
 
 #-----------------------------------------
 #		plot_particledensity();
 #-----------------------------------------
 def plot_particledensity():
-	plt.figure();
+	#DIRTY
 	
-	pos = 999;
-	print(Nt)
-	print(N)
-	tt = pos*p*dt;
+	data = np.loadtxt('Npartikler.txt') #Kommer inn dimensjonslos.
+	data = data*L#*10**6;				# Gjor dimensjonsfull og konverterer til mikrometer.
 	
-	#Simulated result
-	data = np.loadtxt('Npartikler.txt') #kommer inn dimensjonslos.
-	data = data*L;
-	plt.title('Particle density')
-	plt.ylabel('n')
-	plt.xlabel('x/m')	
-	start = np.floor(data.min()/L) - (1.0-a) #Gjør at hvert bin gåt fra et toppunkt til neste.
-	stop = np.ceil(data.max()/L) + a
+	#Setter antall posisjoner som skal plottes.
+	nplots = 6
+	pos = zeros(nplots);
+	tt = zeros(nplots)
+	for i in range(nplots):
+		pos[i] = floor(i* (1/(float(nplots)-1.0))*(Nt/p));	#Gjor at det blir plottet posisjoner med jevnt mellomrom i tid.
+		tt[i] = pos[i]*p*dt;	
+	
+	pos[nplots-1] = pos[nplots-1] -1;
+	print(pos);
+	
+	
+	#Gjor klar til a plotte 3d figur av partikkeltetthetene ved forskjellige posisjoner	
+	start = np.floor(data.min()/L) - (1.0-a) 	#Gjor at hvert bin gaar fra et toppunkt til neste pga. det er der flest partikkler
+	stop = np.ceil(data.max()/L) + a			#befinner seg til enhver tid.
 	bins = (stop-start)
+	xmin = start*L								#Setter intervallet som skal plottes
+	xmax = stop*L
 	
-	plt.hist(data[:,pos], bins, range=[start*L, stop*L]);
-
+	ax = gca(projection = '3d')
+	D1 = KbT/g1	
+	
+	for i in range(6):
+	
+		#Plotter barplot fra simulerte data
+		hist, xedges = np.histogram(data[:, pos[i]], bins = bins, range=(xmin, xmax));	#Hist: Hoyden til hver bar. Xedge: Posisjon 
+		xcenter = (xedges[:-1] + xedges[1:])/2												#til kanten. xcenter: senterposisjon	
+		ax.bar(xcenter,hist,align='center', zs = tt[i], zdir='y', alpha=0.8, width = xcenter[1] - xcenter[0])
+		
+		#Teoretisk kurve for frie partikkler
+		x = linspace(min(data[:,pos[i]]),max(data[:,pos[i]]), Nt)
+		n = N/(np.sqrt(4*np.pi*D1*tt[i])) * np.exp(-x**2/(4*D1*tt[i])) * (xcenter[1] - xcenter[0]);
+		print(max(n))
+		#ax.plot(x, n, tt[i], zdir='y')
+		
+		
+	ax.set_xlim3d(min(xcenter), max(xcenter));
+	ax.set_ylim3d(min(tt), max(tt));
+    
+	ax.set_title('Particle density without flashing potential')
+	ax.set_xlabel('x/m')
+	ax.set_ylabel('t/s')
+	ax.set_zlabel('n')
+	
+	
 #-----------------------------------------
 #		plot_trajectory();
 #-----------------------------------------
@@ -108,8 +148,13 @@ def plot_avgDriftVelocity():
 
 
 start = time.time()
+
+print('\n');
 print("PROGRAM plotting: Begin")
-[dU,tau,tid,t,dt,N,M,Nt,w,w2,D1, D2, p] = read_constants()
+print('\n');
+
+[dU,tau,tid,t,dt,N,M,Nt,w,w2,D1, D2, p, L, a, eta, KbT, g1, g2, r1, r2] = read_constants()
+scaling_factor = 10**6;
 
 #plot_trajectory();
 #plt.savefig('trajectoy.pdf')
@@ -118,14 +163,14 @@ print("PROGRAM plotting: Begin")
 #plot_avgDriftVelocity()
 #plt.savefig('avgDriftVelocity.pdf')
 
-L = 20E-6;
-a = 0.2;
-
 plt.figure();
 plot_particledensity()
+print('Saving....')
 plt.savefig('particledensity.pdf')
 
 stop = time.time()
+print('\n');
 print("PROGRAM plotting: end")
 print("Plottime: %f seconds" %(stop-start))
+print('\n');
 #raw_input("Press enter to continue")

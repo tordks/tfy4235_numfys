@@ -29,7 +29,9 @@ implicit none
 	real :: start, finish
 	
 	call cpu_time(start)
+	write(*,*) '\n'
 	write(*,*) 'PROGRAM Assignment1: Begin'
+	write(*,*) '\n'
 	call init_random_seed();
 	
 	!-----------------------------------------------------------
@@ -67,12 +69,15 @@ implicit none
 		write(*,*) k
 		enddo
 		xn = xn;
-		consts = [dU,tau,tid,t,dt,real(N,wp),real(M,wp), real(Nt,wp), w, w2, D1, D2, real(p,wp), real(time(),wp)];
+		consts = [dU,tau,tid,t,dt,real(N,wp),real(M,wp), real(Nt,wp), w, w2, D1, D2, real(p,wp), L, real(a,wp), eta, KbT, g1, g2, r1, r2];
+		write(*,*) 'saving....'
 		call tofile(consts,num_consts,1, const,1);
 		call toFile(xn,N,Nt, posn,p);
 	endif
-	
+
+write(*,*) '\n'
 write(*,*) 'PROGRAM Assignment1: end';
+write(*,*) '\n'
 call cpu_time(finish);
 print '("Time used = ",f10.3," seconds.")', (finish-start)
 END PROGRAM Assignment1

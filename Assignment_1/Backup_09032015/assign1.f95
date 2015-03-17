@@ -49,7 +49,7 @@ implicit none
 	else		
 		avgvd = 0;
 		do j = 0, M-1
-			tauArr(j) = real(j,wp)*0.005_wp
+			tauArr(j) = real(j,wp)*0.01_wp
 		enddo
 	
 		do k = 0, M-1
