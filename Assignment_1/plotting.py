@@ -8,6 +8,7 @@ rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
 rc('text', usetex=True)
 import pylab
 from pylab import * 
+from mpl_toolkits.mplot3d import Axes3D
 
 ion()
 
@@ -42,15 +43,22 @@ def read_constants():
 def plot_particledensity():
 	plt.figure();
 	
-	pos = 10
-	tt = pos*dt;
+	pos = 999;
+	print(Nt)
+	print(N)
+	tt = pos*p*dt;
 	
 	#Simulated result
-	data = np.loadtxt('Npartikler.txt')
+	data = np.loadtxt('Npartikler.txt') #kommer inn dimensjonslos.
+	data = data*L;
 	plt.title('Particle density')
 	plt.ylabel('n')
-	plt.xlabel('x')
-	plt.hist(data[:,pos], 20);
+	plt.xlabel('x/m')	
+	start = np.floor(data.min()/L) - (1.0-a) #Gjør at hvert bin gåt fra et toppunkt til neste.
+	stop = np.ceil(data.max()/L) + a
+	bins = (stop-start)
+	
+	plt.hist(data[:,pos], bins, range=[start*L, stop*L]);
 
 #-----------------------------------------
 #		plot_trajectory();
@@ -103,12 +111,15 @@ start = time.time()
 print("PROGRAM plotting: Begin")
 [dU,tau,tid,t,dt,N,M,Nt,w,w2,D1, D2, p] = read_constants()
 
-plot_trajectory();
-plt.savefig('trajectoy.pdf')
+#plot_trajectory();
+#plt.savefig('trajectoy.pdf')
 
 #plt.figure
 #plot_avgDriftVelocity()
 #plt.savefig('avgDriftVelocity.pdf')
+
+L = 20E-6;
+a = 0.2;
 
 plt.figure();
 plot_particledensity()

@@ -49,7 +49,10 @@ implicit none
 			!--------------------
 			!Lager en matrise med N partikler over Nt tidssteg
 			!--------------------
-	
+			
+			!Bør finne en metode å gå lengre i tid og lagre færre verdier.
+			!	- Lage en 1x2 vektor som inneholder de to nyeste verdiene og at xn kun lagrer hver andre verdi feks.
+			
 			xn = 0
 			t = 0
 			
@@ -63,7 +66,7 @@ implicit none
 			
 		write(*,*) k
 		enddo
-		
+		xn = xn;
 		consts = [dU,tau,tid,t,dt,real(N,wp),real(M,wp), real(Nt,wp), w, w2, D1, D2, real(p,wp), real(time(),wp)];
 		call tofile(consts,num_consts,1, const,1);
 		call toFile(xn,N,Nt, posn,p);

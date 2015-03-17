@@ -1,5 +1,6 @@
 #! /bin/bash
 
 make
-./assign1.out
+ulimit -s unlimited
+nice ./assign1.out
 python plotting.py
